@@ -357,5 +357,11 @@ namespace Chess
 
             ExportGrid.Visibility = Visibility.Collapsed;
         }
+
+        private void NineSixtyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Test");
+            
+        }
     }
 }

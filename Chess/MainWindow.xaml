@@ -152,6 +152,9 @@
                 <Button x:Name="ExportButton" FontSize="18" DockPanel.Dock="Left" Click="ExportButton_Click">
                     Export
                 </Button>
+                <Button x:Name="NineSixtyButton" FontSize="18" DockPanel.Dock="Right" Click="NineSixtyButton_Click">
+                    Chess 960
+                </Button>
             </DockPanel>
         </Grid>
     </Grid>
