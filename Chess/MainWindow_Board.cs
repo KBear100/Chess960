@@ -552,5 +552,90 @@ namespace Chess
             LinkedListNode<ChessMove> lastNode = board.MovesHistory.Last;
             PushMoveToHistory(lastNode);
         }
+
+
+        int previousRandomNumber = 0;
+        
+        private void Chess960()
+        {
+            board = new ChessBoard();
+            foreach (Viewbox piece in pieces.Values)
+            {
+                BoardCanvas.Children.Remove(piece);
+            }
+            pieces.Clear();
+            MovesHistory.SelectionChanged -= MovesHistory_SelectionChanged;
+            MovesHistory.Items.Clear();
+            MovesHistory.SelectionChanged += MovesHistory_SelectionChanged;
+
+            board.Pieces.Clear();
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('a', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('b', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('c', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('d', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('e', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('f', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('g', 2)));
+            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('h', 2)));
+
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('a', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('b', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('c', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('d', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('e', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('f', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('g', 7)));
+            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('h', 7)));
+
+            Random random = new Random();
+            int randomNumber = random.Next(1, 9);
+            Check960Numbers(randomNumber);
+            board.Pieces.Add(new King(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
+            board.Pieces.Add(new King(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
+
+            // Draw pieces
+            foreach (ChessPiece piece in board.Pieces)
+            {
+                pieces.Add(piece, GetGraphicalChessPiece(piece));
+            }
+
+            UpdateBoard().Wait();
+            ResignButton.IsEnabled = DrawOfferButton.IsEnabled = true;
+        }
+
+        private int Check960Numbers(int currentNumber)
+        {
+            Random random = new Random();
+            while (previousRandomNumber == currentNumber)
+            {
+                currentNumber = random.Next(1, 9);
+            }
+            previousRandomNumber = currentNumber;
+            return currentNumber;
+        }
+
+        private char RandomNumberToChar(int randomNumber)
+        {
+            switch(randomNumber)
+            {
+                case 1:
+                    return 'a';
+                case 2:
+                    return 'b';
+                case 3:
+                    return 'c';
+                case 4:
+                    return 'd';
+                case 5:
+                    return 'e';
+                case 6:
+                    return 'f';
+                case 7:
+                    return 'g';
+                case 8:
+                    return 'h';
+            }
+            return '0';
+        }
     }
 }

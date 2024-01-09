@@ -360,8 +360,7 @@ namespace Chess
 
         private void NineSixtyButton_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Test");
-            
+            Chess960();
         }
     }
 }
