@@ -1,4 +1,5 @@
 ﻿using Chess.ChessUtil.ChessPieces;
+using Chess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -547,6 +548,38 @@ namespace Chess.ChessUtil.Tests
             Assert.IsTrue(board.LastMoveNode.Value.Symbols == "=" + wQueen2.Letter + "+");
             board.Redo();
             PrintBoard(board);
+        }
+
+        [TestMethod()]
+        public void Chess960RandomTest()
+        {
+            ChessBoard board = new ChessBoard();
+            
+        }
+
+        [TestMethod()]
+        public void Bishops960Test()
+        {
+            ChessBoard board = new ChessBoard();
+        }
+
+        [TestMethod()]
+        public void KingRooks960Test()
+        {
+            ChessBoard board = new ChessBoard();
+        }
+
+        [TestMethod()]
+        public void Chess960NoOverlapTest()
+        {
+            ChessBoard board = new ChessBoard();
+            
+        }
+
+        [TestMethod()]
+        public void Chess960AllPiecesTest()
+        {
+            ChessBoard board = new ChessBoard();
         }
     }
 }
