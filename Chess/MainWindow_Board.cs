@@ -552,14 +552,10 @@ namespace Chess
             LinkedListNode<ChessMove> lastNode = board.MovesHistory.Last;
             PushMoveToHistory(lastNode);
         }
-
-
-        List<int> spacesFull = new List<int>();
         
         public void Chess960()
         {
             board = new ChessBoard();
-            spacesFull.Clear();
             foreach (Viewbox piece in pieces.Values)
             {
                 BoardCanvas.Children.Remove(piece);
@@ -569,97 +565,7 @@ namespace Chess
             MovesHistory.Items.Clear();
             MovesHistory.SelectionChanged += MovesHistory_SelectionChanged;
 
-            board.Pieces.Clear();
-            //Place Pawns
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('a', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('b', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('c', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('d', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('e', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('f', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('g', 2)));
-            board.Pieces.Add(new Pawn(ChessPlayer.White, new ChessPosition('h', 2)));
-
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('a', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('b', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('c', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('d', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('e', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('f', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('g', 7)));
-            board.Pieces.Add(new Pawn(ChessPlayer.Black, new ChessPosition('h', 7)));
-
-            //Place Rooks
-            Random random = new Random();
-            int randomNumber = random.Next(1, 9);
-            randomNumber = Check960Numbers(randomNumber);
-            board.Pieces.Add(new Rook(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Rook(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-            int rook1Position = randomNumber;
-
-            randomNumber = random.Next(1, 9);
-            randomNumber = Check960Numbers(randomNumber);
-            int rook2Position = randomNumber;
-            if(rook1Position + 1 == rook2Position)
-            {
-                spacesFull.Remove(rook2Position);
-                randomNumber++;
-                rook2Position++;
-                if (randomNumber == 9)
-                {
-                    randomNumber = 1;
-                    rook2Position = 1;
-                }
-                spacesFull.Add(rook2Position);
-            }
-            if(rook2Position + 1 == rook1Position)
-            {
-                spacesFull.Remove(rook2Position);
-                randomNumber--;
-                rook2Position--;
-                if (randomNumber == 0)
-                {
-                    randomNumber = 8;
-                    rook2Position = 8;
-                }
-                spacesFull.Add(rook2Position);
-            }
-            board.Pieces.Add(new Rook(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Rook(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-
-            //Place Kings
-            randomNumber = Check960Numbers(PlaceKing(rook1Position, rook2Position));
-
-            //Place Bishops
-            int[] greenSquares = { 1, 3, 5, 7 };
-            int[] whiteSquares = { 2, 4, 6, 8 };
-
-            randomNumber = random.Next(0, 4);
-            randomNumber = PlaceBishop(randomNumber ,greenSquares);
-            board.Pieces.Add(new Bishop(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Bishop(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-            
-            randomNumber = random.Next(0, 4);
-            randomNumber = PlaceBishop(randomNumber ,whiteSquares);
-            board.Pieces.Add(new Bishop(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Bishop(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-
-            //Place Knights
-            randomNumber = random.Next(1, 9);
-            randomNumber = Check960Numbers(randomNumber);
-            board.Pieces.Add(new Knight(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Knight(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-            
-            randomNumber = random.Next(1, 9);
-            randomNumber = Check960Numbers(randomNumber);
-            board.Pieces.Add(new Knight(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Knight(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-
-            //Place Queens
-            randomNumber = random.Next(1, 9);
-            randomNumber = Check960Numbers(randomNumber);
-            board.Pieces.Add(new Queen(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new Queen(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
+            board.Chess960();
 
             // Draw pieces
             foreach (ChessPiece piece in board.Pieces)
@@ -669,67 +575,6 @@ namespace Chess
 
             UpdateBoard().Wait();
             ResignButton.IsEnabled = DrawOfferButton.IsEnabled = true;
-        }
-
-        private int PlaceKing(int rook1Position, int rook2Position)
-        {
-            Random random = new Random();
-            int randomNumber = 0;
-            if (rook1Position < rook2Position) randomNumber = random.Next(rook1Position + 1, rook2Position);
-            else randomNumber = random.Next(rook2Position + 1, rook1Position);
-
-            board.Pieces.Add(new King(ChessPlayer.White, new ChessPosition(RandomNumberToChar(randomNumber), 1)));
-            board.Pieces.Add(new King(ChessPlayer.Black, new ChessPosition(RandomNumberToChar(randomNumber), 8)));
-
-            return randomNumber;
-        }
-
-        private int Check960Numbers(int currentNumber)
-        {
-            Random random = new Random();
-            while (spacesFull.Contains(currentNumber))
-            {
-                currentNumber = random.Next(1, 9);
-            }
-            spacesFull.Add(currentNumber);
-            return currentNumber;
-        }
-
-        private int PlaceBishop(int currentNumber, int[] squareArray)
-        {
-            Random random = new Random();
-            currentNumber = squareArray[currentNumber];
-            while (spacesFull.Contains(currentNumber))
-            {
-                currentNumber = random.Next(0, 4);
-                currentNumber = squareArray[currentNumber];
-            }
-            spacesFull.Add(currentNumber);
-            return currentNumber;
-        }
-
-        private char RandomNumberToChar(int randomNumber)
-        {
-            switch(randomNumber)
-            {
-                case 1:
-                    return 'a';
-                case 2:
-                    return 'b';
-                case 3:
-                    return 'c';
-                case 4:
-                    return 'd';
-                case 5:
-                    return 'e';
-                case 6:
-                    return 'f';
-                case 7:
-                    return 'g';
-                case 8:
-                    return 'h';
-            }
-            return '0';
         }
     }
 }

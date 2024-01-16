@@ -2,6 +2,7 @@
 using Chess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace Chess.ChessUtil.Tests
 {
@@ -554,32 +555,88 @@ namespace Chess.ChessUtil.Tests
         public void Chess960RandomTest()
         {
             ChessBoard board = new ChessBoard();
-            
+            ChessBoard board2 = new ChessBoard();
+            board2.Chess960();
+            Assert.AreNotEqual(board.Pieces[4], board2.Pieces[4]);
+            Assert.AreNotEqual(board.Pieces[7], board2.Pieces[7]);
+            Assert.AreNotEqual(board.Pieces[12], board2.Pieces[12]);
         }
 
         [TestMethod()]
         public void Bishops960Test()
         {
             ChessBoard board = new ChessBoard();
+            board.Chess960();
+            char[] greenFiles = { 'a', 'c', 'e', 'g' };
+            char[] whiteFiles = { 'b', 'd', 'f', 'h' };
+            Assert.IsTrue(greenFiles.Contains<char>(board.Pieces[22].Position.File));
+            Assert.IsTrue(greenFiles.Contains<char>(board.Pieces[23].Position.File));
+            Assert.IsTrue(whiteFiles.Contains<char>(board.Pieces[24].Position.File));
+            Assert.IsTrue(whiteFiles.Contains<char>(board.Pieces[25].Position.File));
         }
 
         [TestMethod()]
         public void KingRooks960Test()
         {
             ChessBoard board = new ChessBoard();
+            board.Chess960();
+            if (board.Pieces[16].Position.File < board.Pieces[18].Position.File)
+            {
+                Assert.IsTrue(board.Pieces[20].Position.File < board.Pieces[18].Position.File);
+                Assert.IsTrue(board.Pieces[20].Position.File > board.Pieces[16].Position.File);
+
+                Assert.IsTrue(board.Pieces[21].Position.File < board.Pieces[19].Position.File);
+                Assert.IsTrue(board.Pieces[21].Position.File > board.Pieces[17].Position.File);
+            }
+            else
+            {
+                Assert.IsTrue(board.Pieces[20].Position.File > board.Pieces[18].Position.File);
+                Assert.IsTrue(board.Pieces[20].Position.File < board.Pieces[16].Position.File);
+
+                Assert.IsTrue(board.Pieces[21].Position.File > board.Pieces[19].Position.File);
+                Assert.IsTrue(board.Pieces[21].Position.File < board.Pieces[17].Position.File);
+            }
         }
 
         [TestMethod()]
         public void Chess960NoOverlapTest()
         {
             ChessBoard board = new ChessBoard();
-            
+            board.Chess960();
+
+            foreach(var piece in board.Pieces)
+            {
+                foreach(var piece2 in board.Pieces)
+                {
+                    if (piece == piece2) continue;
+
+                    Assert.AreNotEqual(piece.Position, piece2.Position);
+                }
+            }
         }
 
         [TestMethod()]
         public void Chess960AllPiecesTest()
         {
             ChessBoard board = new ChessBoard();
+            board.Chess960();
+
+            Assert.AreEqual(board.Pieces[16].FullName, "Rook");
+            Assert.AreEqual(board.Pieces[17].FullName, "Rook");
+            Assert.AreEqual(board.Pieces[18].FullName, "Rook");
+            Assert.AreEqual(board.Pieces[19].FullName, "Rook");
+            Assert.AreEqual(board.Pieces[20].FullName, "King");
+            Assert.AreEqual(board.Pieces[21].FullName, "King");
+            Assert.AreEqual(board.Pieces[22].FullName, "Bishop");
+            Assert.AreEqual(board.Pieces[23].FullName, "Bishop");
+            Assert.AreEqual(board.Pieces[24].FullName, "Bishop");
+            Assert.AreEqual(board.Pieces[25].FullName, "Bishop");
+            Assert.AreEqual(board.Pieces[26].FullName, "Knight");
+            Assert.AreEqual(board.Pieces[27].FullName, "Knight");
+            Assert.AreEqual(board.Pieces[28].FullName, "Knight");
+            Assert.AreEqual(board.Pieces[29].FullName, "Knight");
+            Assert.AreEqual(board.Pieces[30].FullName, "Queen");
+            Assert.AreEqual(board.Pieces[31].FullName, "Queen");
         }
     }
 }
